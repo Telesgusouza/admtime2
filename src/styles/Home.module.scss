@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap');
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 50px 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info {
+  margin-bottom: 20px;
+
+  h1 {
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+.containerContent {
+  width: 100%;
+  max-width: 400px;
+
+  form {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 25px;
+  }
+
+  input {
+    padding: 7px 40px 2px 10px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid hsl(264, 100%, 60%);
+
+    color: white;
+
+    outline: 0;
+
+    &:focus {
+      border-bottom: 2px solid hsl(264, 100%, 71%);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.841);
+    }
+  }
+
+  label {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 100%;
+    }
+
+    img {
+      position: absolute;
+      right: 10px;
+
+      cursor: pointer;
+    }
+  }
+
+  .toggleOptionLogin {
+    width: fit-content;
+    margin: 0 auto;
+
+    font-size: 0.9rem;
+
+    strong {
+      cursor: pointer;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        height: 1px;
+        width: 0%;
+
+        background-color: white;
+
+        transition: all 0.2s ease;
+      }
+
+      &:hover::after {
+        left: 0%;
+        width: 100%;
+      }
+    }
+  }
+
+  .password {
+    display: flex;
+    flex-direction: column;
+
+    align-items: end;
+
+    label {
+      width: 100%;
+    }
+
+    p {
+      width: fit-content;
+      margin-top: 10px;
+      text-align: right;
+      font-size: 0.85rem;
+
+      cursor: pointer;
+    }
+  }
+
+  button {
+    width: 100%;
+    padding: 8px 15px;
+    border: none;
+
+    font-weight: 600;
+
+    background-color: hsl(264, 100%, 60%);
+    color: white;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: .8;
+    }
+  }
+}
+
+.photo {
+  background-color: rgb(211, 211, 211);
+  position: relative;
+
+  width: 150px;
+  height: 150px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  input {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
