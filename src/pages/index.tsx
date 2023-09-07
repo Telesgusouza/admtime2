@@ -22,7 +22,6 @@ import styles from "@/styles/Home.module.css";
 import { toast } from "react-toastify";
 import { auth, db, storage } from "./api/firebase";
 
-
 export default function Home() {
   const [filePhoto, setFilePhoto] = useState<null | File>(null);
   const [avatar, setAvatar] = useState<null | string>(null);
@@ -81,47 +80,44 @@ export default function Home() {
     if (toggleForm) {
       if (name && email && password) {
         if (password.length >= 6) {
-          setBtnDisabled(true);
-
           try {
             const createUser = await createUserWithEmailAndPassword(
               auth,
               email,
               password
-            ).then((user) => {
-              const uid = user.user.uid;
+            );
 
-              let photoUser;
+            const uid = createUser.user.uid;
 
-              if (filePhoto) {
-                const refStorage = ref(storage, `photoUser/${uid}`);
-                uploadBytes(refStorage, filePhoto).then(() => {
-                  getDownloadURL(refStorage).then((photoUrl) => {
-                    photoUser = photoUrl;
-                  });
-                });
-              }
+            let photoUser;
 
-              setDoc(doc(db, `dataUser/${uid}`), {
-                photoUser: photoUser ? photoUser : null,
-                name,
-                email,
-              }).then(() => {
-                toast.success("Conta criada com sucesso!");
-                setBtnDisabled(false);
-                if (typeof window !== "undefined") {
-                  window.location.replace("/dashboard");
-                }
+            if (filePhoto) {
+
+              const refStorage = ref(storage, `photoUser/${uid}`);
+              await uploadBytes(refStorage, filePhoto);
+
+              await getDownloadURL(refStorage).then((photoUrl) => {
+                photoUser = photoUrl;
               });
-            });
-          } catch (err: any) {
-            setBtnDisabled(false);
-            console.error(err.message);
-            if (
-              err.message === "Firebase: Error (auth/email-already-in-use)."
-            ) {
-              toast.error("Conta já existe");
             }
+
+
+            await setDoc(doc(db, `dataUser/${uid}`), {
+              photoUser: photoUser ? photoUser : null,
+              name,
+              email,
+            }).then(() => {
+              toast.success("Conta criada com sucesso!");
+              setBtnDisabled(false);
+              if (typeof window !== "undefined") {
+                window.location.replace("/dashboard");
+              }
+            });
+          } catch (err) {
+            setBtnDisabled(false);
+            toast.error("Erro ao criar conta.");
+
+            setBtnDisabled(true);
           }
         } else {
           toast.error("senha deve ter 6 caracteres ou mais");
@@ -172,78 +168,75 @@ export default function Home() {
         <title>Login</title>
       </Head>
       <main className={`${styles.container}`}>
-        
+        <div className={styles.containerContent}>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.info}>
+              <h1>faça {toggleForm ? "seu cadastro" : "login no site"}</h1>
+              <p>
+                Faça login ou registre-se para começar a administrar seu tempo.
+              </p>
+            </div>
 
-      <div className={styles.containerContent}>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.info}>
-            <h1>faça {toggleForm ? "seu cadastro" : "login no site"}</h1>
-            <p>
-              Faça login ou registre-se para começar a administrar seu tempo.
-            </p>
-          </div>
-
-          {toggleForm && (
-            <>
-              <div className={styles.photo}>
-                <input type="file" onChange={(e) => handleFile(e)} />
-                {avatar ? (
-                  <img src={avatar} loading="lazy" alt="avatar user" />
-                ) : (
-                  <Image src={imgNoUser} loading="lazy" alt="avatar user" />
-                )}
-              </div>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                type="text"
-                placeholder="Nome"
-              />
-            </>
-          )}
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            placeholder="E-mail"
-          />
-          <div className={styles.password}>
-            <label htmlFor="password" className={styles.password}>
-              <input
-                type={togglePassword ? "text" : "password"}
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                placeholder="Senha"
-              />
-              <Image
-                onClick={handleVisiblePassword}
-                src={togglePassword ? imgPasswordNot : imgPassword}
-                loading="lazy"
-                alt="icone password"
-              />
-            </label>
-            <p onClick={handleResetPassword}>esqueceu a senha?</p>
-          </div>
-
-          <button type="submit" disabled={btnDisabled}>
-            {toggleForm ? "Cadastrar-se" : "Logar"}
-          </button>
-          <p className={styles.toggleOptionLogin}>
-            {toggleForm ? (
+            {toggleForm && (
               <>
-                Já tem conta? <strong onClick={handleToggleForm}>entre</strong>
-              </>
-            ) : (
-              <>
-                Ainda não tem conta?{" "}
-                <strong onClick={handleToggleForm}>cadastre-se</strong>
+                <div className={styles.photo}>
+                  <input type="file" onChange={(e) => handleFile(e)} />
+                  {avatar ? (
+                    <img src={avatar} loading="lazy" alt="avatar user" />
+                  ) : (
+                    <Image src={imgNoUser} loading="lazy" alt="avatar user" />
+                  )}
+                </div>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type="text"
+                  placeholder="Nome"
+                />
               </>
             )}
-          </p>
-        </form>
-      </div>
-      
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              placeholder="E-mail"
+            />
+            <div className={styles.password}>
+              <label htmlFor="password" className={styles.password}>
+                <input
+                  type={togglePassword ? "text" : "password"}
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  placeholder="Senha"
+                />
+                <Image
+                  onClick={handleVisiblePassword}
+                  src={togglePassword ? imgPasswordNot : imgPassword}
+                  loading="lazy"
+                  alt="icone password"
+                />
+              </label>
+              <p onClick={handleResetPassword}>esqueceu a senha?</p>
+            </div>
 
+            <button type="submit" disabled={btnDisabled}>
+              {toggleForm ? "Cadastrar-se" : "Logar"}
+            </button>
+            <p className={styles.toggleOptionLogin}>
+              {toggleForm ? (
+                <>
+                  Já tem conta?{" "}
+                  <strong onClick={handleToggleForm}>entre</strong>
+                </>
+              ) : (
+                <>
+                  Ainda não tem conta?{" "}
+                  <strong onClick={handleToggleForm}>cadastre-se</strong>
+                </>
+              )}
+            </p>
+          </form>
+        </div>
       </main>
     </>
   );
