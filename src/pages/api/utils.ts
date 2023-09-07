@@ -12,7 +12,7 @@ export async function checkConnected() {
 
   if (!user) {
     if (typeof window !== "undefined") {
-      // window.location.replace("/");
+      window.location.replace("/");
     }
   }
 }

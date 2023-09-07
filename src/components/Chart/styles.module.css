@@ -1,6 +1,7 @@
 .chart {
   width: 100%;
   max-width: 500px;
-  height: 400px;
+  height: -moz-fit-content;
+  height: fit-content;
   color: white !important;
 }/*# sourceMappingURL=styles.module.css.map */

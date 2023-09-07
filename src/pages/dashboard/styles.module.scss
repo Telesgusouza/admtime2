@@ -614,4 +614,115 @@
 
     margin-bottom: 40px;
   }
+
+  .chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  ul {
+    width: 100%;
+    margin-top: 10px;
+
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+  }
+
+  li {
+    width: fit-content;
+    padding-left: 5px;
+    margin-left: 15px;
+    margin-bottom: 3px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 0.8rem;
+
+    position: relative;
+  }
+
+  .workChart {
+    &::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+
+      background-color: var(--lightRedWork);
+    }
+  }
+
+  .playChart {
+    &::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+
+      background-color: var(--softBluePlay);
+    }
+  }
+
+  .studyChart {
+    &::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+
+      background-color: var(--lightRedStudy);
+    }
+  }
+
+  .exerciseChart {
+    &::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+
+      background-color: var(--limegreenExercise);
+    }
+  }
+
+  .socialChart {
+    &::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+
+      background-color: var(--violetSocial);
+    }
+  }
+
+  .selfcareChart {
+    &::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+
+      background-color: var(--softOrageSelfCare);
+    }
+  }
 }

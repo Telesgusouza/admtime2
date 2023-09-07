@@ -11,7 +11,7 @@ import imgStudy from "../../../public/images/icon-study.svg";
 import imgExercise from "../../../public/images/icon-exercise.svg";
 import imgSocial from "../../../public/images/icon-social.svg";
 import imgSelfCare from "../../../public/images/icon-self-care.svg";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy } from "react";
 import {
   DocumentData,
   collection,
@@ -23,8 +23,11 @@ import {
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../api/firebase";
 import { toast } from "react-toastify";
-import Chart from "../../components/Chart";
 import { checkConnected } from "../api/utils";
+import { ApexOptions } from "../api/interface";
+import Head from "next/head";
+
+const Chart = lazy(() => import("../../components/Chart"));
 
 interface IPeriodOption {
   current: "daily" | "weekly" | "monthly";
@@ -37,7 +40,7 @@ interface IToggleCard {
   sleep?: boolean;
 }
 
-export default function dashboard({ series }: any) {
+export default function dashboard() {
   const [inputValue, setInputValue] = useState<number>(0);
   const [nameUser, setNameUser] = useState<string | null>(null);
   const [photoUser, setPhotoUser] = useState<string | StaticImageData | null>(
@@ -47,7 +50,7 @@ export default function dashboard({ series }: any) {
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
   const [periodOption, setPeriodOption] = useState<IPeriodOption>({
-    current: "monthly",
+    current: "daily",
   });
   const [currentOptionMonth, setCurrentOptionMonth] = useState<string>("jan");
   const [currentOptionDayWeek, setCurrentOptionDayWeek] =
@@ -145,7 +148,6 @@ export default function dashboard({ series }: any) {
     getDataUser();
   }, []);
 
-  // voltar aqui
   useEffect(() => {
     async function getDataTime() {
       const uid = await getUid();
@@ -210,7 +212,6 @@ export default function dashboard({ series }: any) {
     return () => {};
   }, [currentOptionDayWeek, currentOptionMonth, periodOption]);
 
-  // voltar aqui
   useEffect(() => {
     async function handleData() {
       const uid = await getUid();
@@ -526,9 +527,9 @@ export default function dashboard({ series }: any) {
     e.preventDefault();
 
     if (toggleInfoCard.sleep) {
-      //   handleSubmitSleep();
+      handleSubmitSleep();
     } else {
-      //   handelSubmitTime();
+      handelSubmitTime();
     }
   }
 
@@ -929,6 +930,11 @@ export default function dashboard({ series }: any) {
 
   return (
     <div className={styles.container}>
+
+      <Head>
+        <title>Dashboard</title>
+      </Head>
+
       {toggleCard && (
         <div className={styles.containerEditCard}>
           <div className={styles.containerEditBtn}>
@@ -1101,7 +1107,6 @@ export default function dashboard({ series }: any) {
         </menu>
 
         <section className={styles.containerSection}>
-          
           <div className={styles.containerContent}>
             <article
               className={styles.secWork}
@@ -1354,34 +1359,32 @@ export default function dashboard({ series }: any) {
             <div className={styles.containerChart}>
               <h2>Relatório</h2>
               <p>Relatório de seg</p>
-              <Chart
-                series={[
-                  workValue,
-                  playValue,
-                  studyValue,
-                  exerciseValue,
-                  socialValue,
-                  selfcareValue,
-                ]}
-              />
+
+              <div className={styles.chart}>
+                <Chart
+                  series={[
+                    workValue,
+                    playValue,
+                    studyValue,
+                    exerciseValue,
+                    socialValue,
+                    selfcareValue,
+                  ]}
+                />
+              </div>
+
+              <ul>
+                <li className={styles.workChart} >Trabalho</li>
+                <li className={styles.playChart} >Jogos</li>
+                <li className={styles.studyChart} >Estudos</li>
+                <li className={styles.exerciseChart} >Exercise</li>
+                <li className={styles.socialChart} >Social</li>
+                <li className={styles.selfcareChart} >Sáude</li>
+              </ul>
             </div>
           )}
-          
         </section>
       </main>
     </div>
   );
 }
-
-
-export const getServerSideProps = async () => {
-    return {
-      props: {
-        // Seus dados de inicialização aqui
-        series: [0, 0, 0, 0, 0, 0],
-        ssr: false
-      },
-    };
-  };
-
-  
